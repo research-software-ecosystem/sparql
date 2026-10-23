@@ -35,6 +35,8 @@
     padding: .75rem max(1rem, calc((100% - 1200px) / 2)); background: rgba(255, 255, 255, 0.96);
     border-bottom: 1px solid rgba(2, 52, 82, 0.1); box-shadow: 0 4px 18px rgba(2, 52, 82, 0.05); backdrop-filter: blur(12px); }
   .site-header img { display: block; height: auto; width: 240px; max-width: 58vw; max-height: 52px; }
+  .nav-toggle { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; color: var(--rsec-navy); background: transparent; border: 1px solid var(--rsec-border); border-radius: .7rem; cursor: pointer; }
+  .nav-toggle svg { width: 20px; height: 20px; }
   .site-header nav { display: flex; flex-wrap: wrap; gap: .25rem; font-weight: 650; font-size: .95rem; }
   .site-header nav a { padding: .55rem .75rem; border-radius: .65rem; color: #324650; text-decoration: none; }
   .site-header nav a:hover, .site-header nav a:focus-visible { color: var(--rsec-navy); background: #eef4f6; }
@@ -108,8 +110,16 @@
   .copyright { background: #012a43; border-top: 1px solid rgba(255, 255, 255, 0.12); }
   .copyright p { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
   @media (max-width: 991.98px) {
+    .nav-toggle { display: flex; }
+    .site-header nav { flex-basis: 100%; flex-direction: column; margin-top: .65rem; padding: .4rem; background: #fff; border: 1px solid var(--rsec-border); border-radius: .85rem; box-shadow: var(--rsec-shadow); }
+    .site-header nav.collapse:not(.show) { display: none; }
+    .site-header nav.collapsing { height: 0; overflow: hidden; transition: height .35s ease; }
+    .site-header nav .support { text-align: center; }
     .footer-content ul { flex: 0 0 calc(50% - .75rem); }
     .copyright p { text-align: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-header nav.collapsing { transition: none; }
   }
   @media (max-width: 767.98px) {
     body { font-size: 1rem; }
@@ -146,7 +156,10 @@
 
 <header class="site-header">
   <a href="https://research-software-ecosystem.org/"><img src="https://research-software-ecosystem.org/assets/img/logo-rsec-full.svg" alt="ELIXIR Research Software Ecosystem"></a>
-  <nav aria-label="Main navigation">
+  <button class="nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <nav id="main-nav" class="collapse navbar-collapse" aria-label="Main navigation">
     <a href="https://research-software-ecosystem.org/sources">Sources</a>
     <a href="https://research-software-ecosystem.org/applications">Applications</a>
     <a href="https://research-software-ecosystem.org/docs">Documentation</a>
@@ -210,6 +223,7 @@ ORDER BY DESC(?triples)</textarea>
   <div class="copyright"><p>&copy; 2026 Research Software Ecosystem</p></div>
 </footer>
 
+<script src="https://research-software-ecosystem.org/assets/js/bootstrap.bundle.min.js"></script>
 <script type="module" src="app.js"></script>
 </body>
 </html>
