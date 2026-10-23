@@ -31,10 +31,15 @@
   main p a:hover, #results td a:hover { text-decoration-color: var(--rsec-orange); }
   :focus-visible { outline: 3px solid rgba(241, 124, 33, 0.35); outline-offset: 2px; }
 
-  .site-header { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
-    padding: .75rem max(1rem, calc((100% - 1200px) / 2)); background: rgba(255, 255, 255, 0.96);
+  .site-header { position: sticky; top: 0; z-index: 5; padding: .7rem 0; background: rgba(255, 255, 255, 0.96);
     border-bottom: 1px solid rgba(2, 52, 82, 0.1); box-shadow: 0 4px 18px rgba(2, 52, 82, 0.05); backdrop-filter: blur(12px); }
-  .site-header img { display: block; height: auto; width: 240px; max-width: 58vw; max-height: 52px; }
+  /* Match the website container gutters and Bootstrap brand box. */
+  .header-content { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; width: 100%; max-width: 1200px; margin: 0 auto; padding-inline: 12px; }
+  .site-brand { flex-grow: 1; padding-block: .3125rem; margin-right: 1rem; font-size: 1.25rem; white-space: nowrap; }
+  .site-header img { vertical-align: middle; height: auto; width: auto; max-width: min(240px, 58vw); max-height: 52px; }
+  @media (min-width: 992px) {
+    .header-content { flex-wrap: nowrap; padding-inline: 24px; }
+  }
   .nav-toggle { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; color: var(--rsec-navy); background: transparent; border: 1px solid var(--rsec-border); border-radius: .7rem; cursor: pointer; }
   .nav-toggle svg { width: 20px; height: 20px; }
   .site-header nav { display: flex; flex-wrap: wrap; gap: .25rem; font-weight: 650; font-size: .95rem; }
@@ -123,7 +128,6 @@
   }
   @media (max-width: 767.98px) {
     body { font-size: 1rem; }
-    .site-header { gap: .5rem; }
     .site-header nav { gap: .15rem; }
     .site-header nav a { padding: .5rem; }
   }
@@ -155,7 +159,8 @@
 </div>
 
 <header class="site-header">
-  <a href="https://research-software-ecosystem.org/"><img src="https://research-software-ecosystem.org/assets/img/logo-rsec-full.svg" alt="ELIXIR Research Software Ecosystem"></a>
+  <div class="header-content">
+  <a class="site-brand" href="https://research-software-ecosystem.org/"><img src="https://research-software-ecosystem.org/assets/img/logo-rsec-full.svg" alt="ELIXIR Research Software Ecosystem"></a>
   <button class="nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
   </button>
@@ -166,6 +171,7 @@
     <a class="try-sparql" href="./" aria-current="page">Try SPARQL</a>
     <a class="support" href="https://research-software-ecosystem.org/contacts">Get in Touch</a>
   </nav>
+  </div>
 </header>
 
 <main>
