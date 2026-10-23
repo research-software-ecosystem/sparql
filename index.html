@@ -24,7 +24,7 @@
     --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; font: 1.025rem/1.65 var(--font); -webkit-font-smoothing: antialiased; color: var(--rsec-ink); background: #fff; }
+  body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; margin: 0; font: 1.025rem/1.65 var(--font); -webkit-font-smoothing: antialiased; color: var(--rsec-ink); background: #fff; }
   a { color: var(--rsec-link); }
   a:hover { color: var(--rsec-navy); }
   main p a, #results td a { font-weight: 550; text-decoration-color: rgba(7, 91, 120, 0.35); text-underline-offset: .18em; }
@@ -44,7 +44,7 @@
   .site-header nav .try-sparql { color: var(--rsec-navy); background: #eef4f6; box-shadow: inset 0 -2px 0 var(--rsec-orange); }
   .site-header nav .try-sparql:hover { background: #dce7eb; }
 
-  main { max-width: 1200px; margin: 0 auto; padding: 1.5rem 1rem 2rem; }
+  main { flex: 1 0 auto; width: 100%; max-width: 1200px; margin: 0 auto; padding: 1.5rem 1rem 2rem; }
 
   .intro { margin: .25rem 0 1.25rem; }
   h1 { margin: 0 0 .3rem; color: var(--rsec-navy); font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2rem); font-weight: 750; line-height: 1.15; letter-spacing: -0.035em; }
