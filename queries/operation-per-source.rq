@@ -1,0 +1,13 @@
+# Resources performing "Sequence alignment" (edam:operation_0292) or any more specific
+# operation, counted per source.
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX edam: <http://edamontology.org/>
+
+SELECT ?source (COUNT(DISTINCT ?resource) AS ?resources) WHERE {
+  ?op rdfs:subClassOf* edam:operation_0292 .
+  GRAPH ?g { ?resource schema:featureList ?op }
+  BIND(STRAFTER(STR(?g), "urn:dataset:") AS ?source)
+}
+GROUP BY ?source
+ORDER BY DESC(?resources)

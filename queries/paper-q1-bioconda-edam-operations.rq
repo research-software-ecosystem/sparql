@@ -1,0 +1,15 @@
+# Query 1 of the RSEc paper: EDAM operations of two Bioconda packages, via their bio.tools entries,
+# including the operations they inherit through the EDAM hierarchy.
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX bioconda: <https://github.com/bioconda/bioconda-recipes/tree/master/recipes/>
+PREFIX edam: <http://edamontology.org/> 
+
+SELECT ?bioconda ?op_label WHERE {
+  VALUES ?bioconda { bioconda:admixture bioconda:abricate }
+    ?bioconda schema:identifier ?id .
+    ?id schema:featureList ?op .
+    ?op rdfs:subClassOf* ?parent .
+    ?parent rdfs:subClassOf+ edam:operation_0004 ;
+            rdfs:label ?op_label .
+}

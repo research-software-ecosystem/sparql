@@ -1,0 +1,74 @@
+[
+ {
+  "file": "2024-06-19-wfhub-dump.ttl",
+  "size": 5831466,
+  "gzip": "2024-06-19-wfhub-dump.ttl.gz",
+  "gzipSize": 784030
+ },
+ {
+  "file": "bioconda-dump.ttl",
+  "size": 2450587,
+  "gzip": "bioconda-dump.ttl.gz",
+  "gzipSize": 326429
+ },
+ {
+  "file": "biocontainers-dump.ttl",
+  "size": 5321087,
+  "gzip": "biocontainers-dump.ttl.gz",
+  "gzipSize": 710646
+ },
+ {
+  "file": "bioschemas-biii-dump.ttl",
+  "size": 1271628,
+  "gzip": "bioschemas-biii-dump.ttl.gz",
+  "gzipSize": 306991
+ },
+ {
+  "file": "bioschemas-dump.ttl",
+  "size": 36346686,
+  "gzip": "bioschemas-dump.ttl.gz",
+  "gzipSize": 6718583
+ },
+ {
+  "file": "bise-ontology-biii-dump.ttl",
+  "size": 2024513,
+  "gzip": "bise-ontology-biii-dump.ttl.gz",
+  "gzipSize": 380783
+ },
+ {
+  "file": "debian-dump.ttl",
+  "size": 235327,
+  "gzip": "debian-dump.ttl.gz",
+  "gzipSize": 21887
+ },
+ {
+  "file": "galaxy-dump.ttl",
+  "size": 2184025,
+  "gzip": "galaxy-dump.ttl.gz",
+  "gzipSize": 313225
+ },
+ {
+  "file": "galaxyworkflow-dump.ttl",
+  "size": 5030476,
+  "gzip": "galaxyworkflow-dump.ttl.gz",
+  "gzipSize": 444714
+ },
+ {
+  "file": "workflow_hub.ttl",
+  "size": 1912779,
+  "gzip": "workflow_hub.ttl.gz",
+  "gzipSize": 238895
+ },
+ {
+  "file": "workflowhub-dump.ttl",
+  "size": 5416361,
+  "gzip": "workflowhub-dump.ttl.gz",
+  "gzipSize": 1180016
+ },
+ {
+  "file": "EDAM.owl",
+  "size": 3413870,
+  "gzip": "EDAM.owl.gz",
+  "gzipSize": 300783
+ }
+]
