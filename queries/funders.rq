@@ -1,0 +1,11 @@
+# Funders most often credited.
+PREFIX schema: <http://schema.org/>
+
+SELECT ?funder (COUNT(DISTINCT ?resource) AS ?resources) WHERE {
+  ?resource schema:funder ?f .
+  OPTIONAL { ?f schema:name ?name }
+  BIND(COALESCE(?name, STR(?f)) AS ?funder)
+}
+GROUP BY ?funder
+ORDER BY DESC(?resources)
+LIMIT 20

@@ -1,0 +1,8 @@
+# bio.tools entries that are packaged both as a Bioconda recipe and as a BioContainer.
+PREFIX schema: <http://schema.org/>
+
+SELECT (COUNT(DISTINCT ?biotools) AS ?tools) WHERE {
+  GRAPH <urn:dataset:bioconda-dump.ttl> { ?recipe schema:identifier ?biotools }
+  GRAPH <urn:dataset:biocontainers-dump.ttl> { ?container schema:identifier ?biotools }
+  FILTER(STRSTARTS(STR(?biotools), "https://bio.tools/"))
+}
