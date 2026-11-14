@@ -1,0 +1,65 @@
+[
+ {
+  "id": "paper-q1",
+  "group": "RSEc paper",
+  "title": "Query 1 – EDAM operations of Bioconda packages",
+  "description": "From two Bioconda packages, follow their bio.tools entries to the EDAM operations describing what they do, including operations inherited through the EDAM hierarchy.",
+  "file": "paper-q1-bioconda-edam-operations.rq"
+ },
+ {
+  "id": "paper-q2",
+  "group": "RSEc paper",
+  "title": "Query 2 – resources per “Genetic variation” topic",
+  "description": "Number of resources annotated with the EDAM topic “Genetic variation” and with each of its subtopics. Each row counts the resources annotated directly with that topic.",
+  "file": "paper-q2-genetic-variation-topics.rq"
+ },
+ {
+  "id": "tool-across-registries",
+  "group": "More examples",
+  "title": "One tool across registries (ABySS)",
+  "description": "The records describing ABySS in each source, with the version each one reports.",
+  "file": "tool-across-registries.rq"
+ },
+ {
+  "id": "operation-per-source",
+  "group": "More examples",
+  "title": "Sequence alignment resources per source",
+  "description": "Tools and workflows performing “Sequence alignment” or any more specific EDAM operation, counted per source.",
+  "file": "operation-per-source.rq"
+ },
+ {
+  "id": "biotools-packaged",
+  "group": "More examples",
+  "title": "bio.tools entries packaged in Bioconda and BioContainers",
+  "description": "Number of bio.tools entries that have both a Bioconda recipe and a BioContainer.",
+  "file": "biotools-packaged-conda-and-containers.rq"
+ },
+ {
+  "id": "licenses",
+  "group": "More examples",
+  "title": "Most used licences",
+  "description": "Licences across all sources. Values such as “None” or “Not licensed” show where licence metadata is missing.",
+  "file": "licenses.rq"
+ },
+ {
+  "id": "galaxy-workflow-operations",
+  "group": "More examples",
+  "title": "EDAM operations in Galaxy workflows",
+  "description": "The EDAM operations most often found in Galaxy workflows.",
+  "file": "galaxy-workflow-operations.rq"
+ },
+ {
+  "id": "funders",
+  "group": "More examples",
+  "title": "Most credited funders",
+  "description": "Funders most often credited by tools and workflows.",
+  "file": "funders.rq"
+ },
+ {
+  "id": "triples-per-source",
+  "group": "More examples",
+  "title": "What's in the graph: triples per source",
+  "description": "Number of triples in each source. Each file is loaded as a named graph <urn:dataset:FILE>.",
+  "file": "triples-per-source.rq"
+ }
+]
