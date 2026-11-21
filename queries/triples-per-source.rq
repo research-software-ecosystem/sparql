@@ -1,0 +1,5 @@
+# Size of each source: number of triples per dataset (each file is a named graph).
+SELECT ?g (COUNT(*) AS ?triples)
+WHERE { GRAPH ?g { ?s ?p ?o } }
+GROUP BY ?g
+ORDER BY DESC(?triples)

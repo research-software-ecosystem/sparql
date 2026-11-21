@@ -1,0 +1,16 @@
+# EDAM operations most often found in Galaxy workflows.
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX edam: <http://edamontology.org/>
+
+SELECT ?operation (COUNT(DISTINCT ?workflow) AS ?workflows) WHERE {
+  GRAPH <urn:dataset:galaxyworkflow-dump.ttl> {
+    ?workflow a schema:ComputationalWorkflow ;
+              schema:featureList ?op .
+  }
+  ?op rdfs:subClassOf+ edam:operation_0004 ;
+      rdfs:label ?operation .
+}
+GROUP BY ?operation
+ORDER BY DESC(?workflows)
+LIMIT 20
