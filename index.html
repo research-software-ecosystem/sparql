@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Query the RSEc knowledge graph with SPARQL · ELIXIR Research Software Ecosystem</title>
+<meta name="description" content="Ask your own questions about thousands of bioinformatics tools and workflows: query the ELIXIR Research Software Ecosystem knowledge graph with SPARQL, right in your browser.">
+<link rel="icon" href="https://research-software-ecosystem.org/assets/img/favicon-32x32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="https://research-software-ecosystem.org/assets/img/apple-touch-icon.png">
+<style>
+  /* Colours and shapes of the RSEc website (research-software-ecosystem.org) */
+  :root {
+    --rsec-navy: #023452;
+    --rsec-navy-hover: #07506f;
+    --rsec-ink: #23343e;
+    --rsec-muted: #5d6b73;
+    --rsec-orange: #f17c21;
+    --rsec-green: #79b473;
+    --rsec-border: #dce6e9;
+    --rsec-surface: #f5f8f9;
+    --rsec-link: #075b78;
+    --rsec-shadow: 0 16px 40px rgba(2, 52, 82, 0.09);
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; margin: 0; font: 1.025rem/1.65 var(--font); -webkit-font-smoothing: antialiased; color: var(--rsec-ink); background: #fff; }
+  a { color: var(--rsec-link); }
+  a:hover { color: var(--rsec-navy); }
+  main p a, #results td a { font-weight: 550; text-decoration-color: rgba(7, 91, 120, 0.35); text-underline-offset: .18em; }
+  main p a:hover, #results td a:hover { text-decoration-color: var(--rsec-orange); }
+  :focus-visible { outline: 3px solid rgba(241, 124, 33, 0.35); outline-offset: 2px; }
+
+  .site-header { position: sticky; top: 0; z-index: 5; padding: .7rem 0; background: rgba(255, 255, 255, 0.96);
+    border-bottom: 1px solid rgba(2, 52, 82, 0.1); box-shadow: 0 4px 18px rgba(2, 52, 82, 0.05); backdrop-filter: blur(12px); }
+  /* Match the website container gutters and Bootstrap brand box. */
+  .header-content { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; width: 100%; max-width: 1200px; margin: 0 auto; padding-inline: 12px; }
+  .site-brand { flex-grow: 1; padding-block: .3125rem; margin-right: 1rem; font-size: 1.25rem; white-space: nowrap; }
+  .site-header img { vertical-align: middle; height: auto; width: auto; max-width: min(240px, 58vw); max-height: 52px; }
+  @media (min-width: 992px) {
+    .header-content { flex-wrap: nowrap; padding-inline: 24px; }
+  }
+  .nav-toggle { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; color: var(--rsec-navy); background: transparent; border: 1px solid var(--rsec-border); border-radius: .7rem; cursor: pointer; }
+  .nav-toggle svg { width: 20px; height: 20px; }
+  .site-header nav { display: flex; flex-wrap: wrap; gap: .25rem; font-weight: 650; font-size: .95rem; }
+  .site-header nav a { padding: .55rem .75rem; border-radius: .65rem; color: #324650; text-decoration: none; }
+  .site-header nav a:hover, .site-header nav a:focus-visible { color: var(--rsec-navy); background: #eef4f6; }
+  .site-header nav .support { padding-inline: 1rem; color: #fff; background: var(--rsec-navy); }
+  .site-header nav .support:hover, .site-header nav .support:focus-visible { color: #fff; background: var(--rsec-navy-hover); }
+
+  .site-header nav .try-sparql { color: var(--rsec-navy); background: #eef4f6; box-shadow: inset 0 -2px 0 var(--rsec-orange); }
+  .site-header nav .try-sparql:hover { background: #dce7eb; }
+
+  main { flex: 1 0 auto; width: 100%; max-width: 1200px; margin: 0 auto; padding: 1.5rem 1rem 2rem; }
+
+  .intro { margin: .25rem 0 1.25rem; }
+  h1 { margin: 0 0 .3rem; color: var(--rsec-navy); font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2rem); font-weight: 750; line-height: 1.15; letter-spacing: -0.035em; }
+  .hl { background-image: linear-gradient(transparent 82%, rgba(241, 124, 33, 0.32) 82%); }
+  .intro p { margin: 0; color: var(--rsec-muted); }
+  .intro .query-about { margin-top: .6rem; font-size: .9rem; }
+
+  .panel { padding: clamp(1rem, 3vw, 1.5rem); border: 1px solid var(--rsec-border); border-radius: 20px; background: #fff; box-shadow: var(--rsec-shadow); }
+  .field-label { display: block; margin-bottom: .35rem; font-weight: 650; color: var(--rsec-navy); }
+  select { font: inherit; color: var(--rsec-ink); border: 1px solid #9bb1bc; border-radius: 11px; background: #fff; }
+  select { width: min(100%, 40rem); padding: .55rem .75rem; }
+  #example-desc { margin: .45rem 0 1rem; min-height: 1.65em; color: var(--rsec-muted); }
+  /* Syntax highlighting: the coloured copy (#highlight) sits behind the textarea, whose text is
+     transparent; both must share font, padding, border and wrapping (none) to line up */
+  .editor { position: relative; border: 1px solid #9bb1bc; border-radius: 11px; background: var(--rsec-surface); }
+  .editor:focus-within { outline: 3px solid rgba(241, 124, 33, 0.35); outline-offset: 2px; }
+  .editor textarea, .editor pre { margin: 0; padding: .85rem 1rem; border: 0; font: 14px/1.55 var(--mono); tab-size: 2; white-space: pre; overflow-wrap: normal; }
+  .editor textarea { position: relative; display: block; width: 100%; height: 15rem; resize: vertical; overflow: auto;
+    color: transparent; caret-color: var(--rsec-ink); background: transparent; outline: none; }
+  .editor textarea::selection { color: transparent; background: rgba(2, 52, 82, 0.18); }
+  .editor pre { position: absolute; inset: 0; overflow: hidden; padding-right: calc(1rem + 20px); color: var(--rsec-ink); pointer-events: none; }
+  .tok-keyword { color: var(--rsec-navy); font-weight: 700; }
+  .tok-variable { color: #b4530a; }
+  .tok-iri { color: var(--rsec-link); }
+  .tok-pname { color: #3f7a3a; }
+  .tok-string { color: #9a3412; }
+  .tok-number { color: #6d28d9; }
+  .tok-comment { color: var(--rsec-muted); font-style: italic; }
+
+  .actions { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; margin-top: .9rem; }
+  .btn { font: inherit; font-weight: 650; padding: .6rem 1.1rem; border-radius: 11px; cursor: pointer; }
+  .btn.primary { color: #fff; background: var(--rsec-navy); border: 1px solid var(--rsec-navy); }
+  .btn.primary:hover:not(:disabled) { background: var(--rsec-navy-hover); }
+  .btn.primary:disabled { opacity: .5; cursor: progress; }
+  .btn.secondary { color: var(--rsec-navy); background: transparent; border: 1px solid #9bb1bc; }
+  .btn.secondary:hover { color: #fff; background: var(--rsec-navy); border-color: var(--rsec-navy); }
+  #info { color: var(--rsec-muted); font-weight: 600; }
+  .hint { margin-left: auto; color: var(--rsec-muted); font-size: .85rem; }
+  kbd { font: .8rem var(--mono); padding: .05rem .35rem; border: 1px solid var(--rsec-border); border-radius: 5px; background: var(--rsec-surface); }
+
+  #status { margin-top: 1rem; color: var(--rsec-muted); font-size: .9rem; }
+  #status summary { cursor: pointer; }
+  #status p { margin: .5rem 0; }
+  #status pre { margin: .5rem 0 0; padding: .75rem 1rem; font: 12px/1.5 var(--mono); white-space: pre-wrap; background: var(--rsec-surface); border-radius: 11px; }
+
+  #results:not(:empty) { margin-top: 1.5rem; overflow: auto; max-height: 70vh; border: 1px solid var(--rsec-border); border-radius: 14px; }
+  #results table { border-collapse: collapse; width: 100%; font-size: .94rem; }
+  #results th, #results td { padding: .5rem .75rem; text-align: left; vertical-align: top; word-break: break-word; border-bottom: 1px solid var(--rsec-border); }
+  #results th { position: sticky; top: 0; color: #fff; font-weight: 700; background: var(--rsec-navy); border-color: #315d73; }
+  #results tr:nth-child(odd) td { background: #f8fafb; }
+  #results tr:last-child td { border-bottom: 0; }
+  #results pre { margin: 0; padding: 1rem; font: 13px/1.5 var(--mono); white-space: pre-wrap; }
+  .err { color: #b42318; }
+
+  footer { margin-top: 2rem; color: #dce7eb; background: var(--rsec-navy); }
+  .footer-content { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+  .footer-content nav { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+  .footer-content ul { margin: 0; padding: 0; list-style: none; }
+  footer a, footer a:visited { color: #fff; font-weight: bold; text-decoration: none; }
+  footer a:hover, footer a:focus-visible { color: #ffd1ac; text-decoration: underline; }
+  .copyright { background: #012a43; border-top: 1px solid rgba(255, 255, 255, 0.12); }
+  .copyright p { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+  @media (max-width: 991.98px) {
+    .nav-toggle { display: flex; }
+    .site-header nav { flex-basis: 100%; flex-direction: column; flex-wrap: nowrap; margin-top: .65rem; padding: .4rem; background: #fff; border: 1px solid var(--rsec-border); border-radius: .85rem; box-shadow: var(--rsec-shadow); }
+    .site-header nav.collapse:not(.show) { display: none; }
+    .site-header nav.collapsing { height: 0; overflow: hidden; transition: height .35s ease; }
+    .site-header nav .support { text-align: center; }
+    .footer-content ul { flex: 0 0 calc(50% - .75rem); }
+    .copyright p { text-align: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-header nav.collapsing { transition: none; }
+  }
+  @media (max-width: 767.98px) {
+    body { font-size: 1rem; }
+    .site-header nav { gap: .15rem; }
+    .site-header nav a { padding: .5rem; }
+  }
+
+  #splash { position: fixed; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; transition: opacity .4s;
+    background: radial-gradient(circle at 85% 15%, rgba(121, 180, 115, 0.18), transparent 35%), linear-gradient(135deg, #f2f7f8 0%, #fff 60%, #fff7f0 100%); }
+  #splash.done { opacity: 0; pointer-events: none; }
+  #splash > div { width: min(520px, 90vw); }
+  #splash img { height: 56px; width: auto; margin-bottom: 1.5rem; }
+  #splash h2 { margin: 0 0 .25rem; color: var(--rsec-navy); font-size: 1.6rem; font-weight: 780; letter-spacing: -0.03em; line-height: 1.15; }
+  #splash p { margin: 0 0 1.25rem; color: var(--rsec-muted); }
+  .bar { height: 10px; background: var(--rsec-border); border-radius: 999px; overflow: hidden; }
+  #bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--rsec-navy), var(--rsec-navy-hover)); border-radius: 999px; }
+  #splash-text { display: flex; justify-content: space-between; gap: 1rem; margin-top: .6rem; color: var(--rsec-muted); font-size: .85rem; }
+  #splash-pct { font-weight: 700; color: var(--rsec-navy); }
+  #splash-errors { padding-left: 1.2rem; font-size: .85rem; }
+</style>
+</head>
+<body>
+<div id="splash" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading the RSEc knowledge graph">
+  <div>
+    <img src="https://research-software-ecosystem.org/assets/img/logo-rsec-full.svg" alt="ELIXIR Research Software Ecosystem">
+    <h2>Loading the RSEc knowledge graph…</h2>
+    <p>The metadata of thousands of tools and workflows is being loaded into your browser. This takes a few seconds.</p>
+    <div class="bar"><div id="bar"></div></div>
+    <div id="splash-text"><span id="splash-file">Starting the query engine</span><span id="splash-pct">0%</span></div>
+    <ul id="splash-errors" class="err"></ul>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="header-content">
+  <a class="site-brand" href="https://research-software-ecosystem.org/"><img src="https://research-software-ecosystem.org/assets/img/logo-rsec-full.svg" alt="ELIXIR Research Software Ecosystem"></a>
+  <button class="nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <nav id="main-nav" class="collapse navbar-collapse" aria-label="Main navigation">
+    <a href="https://research-software-ecosystem.org/sources">Sources</a>
+    <a href="https://research-software-ecosystem.org/applications">Applications</a>
+    <a href="https://research-software-ecosystem.org/docs">Documentation</a>
+    <a class="try-sparql" href="./" aria-current="page">Try SPARQL</a>
+    <a class="support" href="https://research-software-ecosystem.org/contacts">Get in Touch</a>
+  </nav>
+  </div>
+</header>
+
+<main>
+  <section class="intro">
+    <h1>Query the <span class="hl">RSEc knowledge graph</span> with SPARQL</h1>
+    <p>Linked metadata of bioinformatics tools and workflows, gathered by the ELIXIR Research Software Ecosystem from bio.tools, Bioconda, BioContainers, Galaxy, WorkflowHub and more. <a href="https://research-software-ecosystem.org/">Learn more about RSEc</a></p>
+    <p class="query-about">Data updated daily from the <a href="https://github.com/research-software-ecosystem/content">RSEc content repository</a>. Queries run in your browser using <a href="https://github.com/oxigraph/oxigraph">Oxigraph</a>.</p>
+  </section>
+
+  <section class="panel" aria-label="Query">
+    <label class="field-label" for="examples">Start from an example</label>
+    <select id="examples"><option value="">Your own query</option></select>
+    <p id="example-desc"></p>
+    <label class="field-label" for="query">SPARQL query</label>
+    <div class="editor">
+      <pre id="highlight" aria-hidden="true"></pre>
+      <textarea id="query" spellcheck="false" autocapitalize="off" autocomplete="off">SELECT ?g (COUNT(*) AS ?triples)
+WHERE { GRAPH ?g { ?s ?p ?o } }
+GROUP BY ?g
+ORDER BY DESC(?triples)</textarea>
+    </div>
+    <div class="actions">
+      <button id="run" class="btn primary" disabled>Run query</button>
+      <button id="copy-link" class="btn secondary">Copy link to this query</button>
+      <span id="info"></span>
+      <span class="hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> also runs the query</span>
+    </div>
+    <details id="status">
+      <summary>Loading the knowledge graph…</summary>
+      <p>Each source file is loaded as its own named graph <code>&lt;urn:dataset:FILE&gt;</code>. Queries see all of them together; use <code>GRAPH ?g { … }</code> to tell them apart.</p>
+      <pre id="log"></pre>
+    </details>
+  </section>
+
+  <section id="results" aria-live="polite"></section>
+</main>
+
+<footer>
+  <div class="footer-content">
+    <nav aria-label="Footer navigation">
+      <ul>
+        <li><a href="https://research-software-ecosystem.org/contributors">Credits</a></li>
+        <li><a href="https://research-software-ecosystem.org/licence">Licence</a></li>
+      </ul>
+      <ul>
+        <li><a href="https://research-software-ecosystem.org/contacts">Contacts</a></li>
+        <li><a href="https://github.com/research-software-ecosystem/content/issues">Report an issue</a></li>
+      </ul>
+      <ul>
+        <li><a href="https://github.com/research-software-ecosystem/sparql">Website source</a></li>
+        <li><a href="https://github.com/research-software-ecosystem/content">Metadata repository</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="copyright"><p>&copy; 2026 Research Software Ecosystem</p></div>
+</footer>
+
+<script src="https://research-software-ecosystem.org/assets/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>

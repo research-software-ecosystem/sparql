@@ -1,0 +1,16 @@
+# Query 2 of the RSEc paper: number of resources annotated with the EDAM topic "Genetic variation"
+# and with each of its subtopics (each row counts direct annotations of that topic).
+PREFIX edam: <http://edamontology.org/>
+PREFIX schema: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?label (COUNT (?application) AS ?count)
+WHERE {
+     ?application schema:applicationSubCategory ?class .
+    ?class  rdfs:label ?label ;
+            rdfs:subClassOf* ?uri .
+   ?uri rdfs:label "Genetic variation" .
+}
+GROUP BY ?class ?label
+ORDER BY DESC(?count)

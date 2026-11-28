@@ -1,0 +1,10 @@
+# Most used licences across all sources. Values such as "None" or "Not licensed" show
+# where licence metadata is missing.
+PREFIX schema: <http://schema.org/>
+
+SELECT ?license (COUNT(DISTINCT ?resource) AS ?resources) WHERE {
+  ?resource schema:license ?license .
+}
+GROUP BY ?license
+ORDER BY DESC(?resources)
+LIMIT 20

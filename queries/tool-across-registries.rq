@@ -1,0 +1,13 @@
+# The same tool (ABySS) as described by each registry, with the version each one reports.
+PREFIX schema: <http://schema.org/>
+
+SELECT ?source ?record ?version WHERE {
+  GRAPH ?g {
+    ?record a schema:SoftwareApplication ;
+            schema:name ?name .
+    OPTIONAL { ?record schema:softwareVersion ?version }
+  }
+  FILTER(LCASE(STR(?name)) = "abyss")
+  BIND(STRAFTER(STR(?g), "urn:dataset:") AS ?source)
+}
+ORDER BY ?source
